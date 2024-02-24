@@ -1,23 +1,12 @@
 import { useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addContact } from "../../redux/contacts-slice";
-import { getContacts } from "../../redux/selectors";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contacts/contacts-operations";
 import { nanoid } from 'nanoid';
 import styles from './ContactForm.module.css';
 
 export const ContactForm = () => {
-    const contacts = useSelector(getContacts);
     const dispatch = useDispatch();
     
-    const doesNameAlreadyExist = ({ name }) => {
-        const normalizedName = name.toLowerCase();
-        
-        const duplicate = contacts.find(contact => {
-            const normalizedCurrentName = contact.name.toLowerCase();
-            return (normalizedName === normalizedCurrentName);
-        })
-        return Boolean(duplicate);
-    }
     
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,11 +15,6 @@ export const ContactForm = () => {
         const newContact = {
             name: form.elements.name.value,
             number: form.elements.number.value
-        }
-        
-        if (doesNameAlreadyExist(newContact)) {
-            alert(`${newContact.name} is already in contacts.`);
-            return
         }
 
         const action = addContact(newContact);
